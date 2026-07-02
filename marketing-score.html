@@ -1,0 +1,423 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>Marketing Health Score — SMPL MKTG</title>
+<meta name="description" content="Get your free Marketing Health Score in 60 seconds. Answer 8 quick questions and see where your marketing is strong — and where you're leaving growth on the table.">
+<link rel="canonical" href="https://smplmktg.com/marketing-score.html">
+<meta property="og:type" content="website">
+<meta property="og:title" content="What's your Marketing Health Score? — SMPL MKTG">
+<meta property="og:description" content="A free, 60-second check of your marketing across SEO, paid ads, social, and strategy. Get your score and your biggest opportunities.">
+<meta property="og:url" content="https://smplmktg.com/marketing-score.html">
+<meta property="og:image" content="https://smplmktg.com/assets/og-image.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" href="assets/favicon.svg" type="image/svg+xml">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="assets/css/styles.css">
+<style>
+/* ===== Marketing Health Score (grader) — namespaced .smpl-grader ===== */
+.smpl-grader{ font-family:var(--font-body); color:var(--ink); background:var(--cream); border:1px solid var(--line); border-radius:var(--radius); overflow:hidden; max-width:560px; margin:0 auto; box-shadow:var(--shadow); line-height:1.55; }
+.smpl-grader *{box-sizing:border-box;}
+.smpl-grader h1,.smpl-grader h2,.smpl-grader h3{ font-family:var(--font-display); font-weight:600; color:var(--forest-dark); margin:0; line-height:1.2; letter-spacing:-.01em; }
+.gr-head{background:var(--forest); color:var(--cream); padding:1.3rem 1.5rem;}
+.gr-head .eyebrow{font-family:var(--font-display); font-weight:600; font-size:.72rem; letter-spacing:.12em; text-transform:uppercase; color:var(--sage-tint); margin:0 0 .35rem;}
+.gr-head h1{color:var(--cream); font-size:1.35rem;}
+.gr-head p{margin:.3rem 0 0; color:var(--sage-tint); font-size:.88rem;}
+.gr-prog{height:5px; background:var(--sand);}
+.gr-prog span{display:block; height:100%; background:var(--clay); width:0; transition:width .3s ease;}
+.gr-body{padding:1.5rem;}
+.gr-btn{ font-family:var(--font-display); font-weight:600; font-size:1rem; cursor:pointer; padding:.85rem 1.6rem; border-radius:999px; border:2px solid transparent; transition:all .15s; text-align:center; }
+.gr-btn--primary{background:var(--forest); color:var(--cream);}
+.gr-btn--primary:hover{background:var(--forest-dark);}
+.gr-btn--clay{background:var(--clay); color:var(--cream);}
+.gr-btn--clay:hover{background:var(--clay-dark);}
+.gr-btn--ghost{background:transparent; color:var(--forest); border-color:var(--forest);}
+.gr-btn--ghost:hover{background:var(--forest); color:var(--cream);}
+.gr-btn[disabled]{opacity:.45; cursor:not-allowed;}
+.gr-btn--full{width:100%;}
+.gr-intro h2{font-size:1.3rem; margin-bottom:.5rem;}
+.gr-intro p{color:var(--ink-soft); margin:0 0 1.1rem;}
+.gr-feats{list-style:none; padding:0; margin:0 0 1.4rem; display:grid; gap:.55rem;}
+.gr-feats li{display:flex; gap:.6rem; align-items:flex-start; font-size:.92rem;}
+.gr-feats svg{width:18px; height:18px; color:var(--success); flex:none; margin-top:2px;}
+.gr-qmeta{font-family:var(--font-display); font-weight:600; font-size:.76rem; letter-spacing:.08em; text-transform:uppercase; color:var(--clay); margin-bottom:.5rem;}
+.gr-q h2{font-size:1.18rem; margin-bottom:1.1rem;}
+.gr-opts{display:grid; gap:.65rem; margin-bottom:1.4rem;}
+.gr-opt{ display:flex; align-items:center; gap:.8rem; text-align:left; width:100%; background:var(--cream); border:1.5px solid var(--line); border-radius:var(--radius-sm); padding:.95rem 1rem; cursor:pointer; font-family:var(--font-body); font-size:.96rem; color:var(--ink); transition:all .15s; }
+.gr-opt:hover{border-color:var(--sage); background:#fff;}
+.gr-opt.sel{border-color:var(--forest); background:var(--forest-tint);}
+.gr-opt .mark{width:20px; height:20px; border-radius:50%; border:2px solid var(--sage); flex:none; display:grid; place-items:center;}
+.gr-opt.sel .mark{border-color:var(--forest); background:var(--forest);}
+.gr-opt.sel .mark::after{content:""; width:8px; height:8px; border-radius:50%; background:var(--cream);}
+.gr-nav{display:flex; justify-content:space-between; gap:.8rem;}
+.gr-scorewrap{text-align:center; margin-bottom:1.3rem;}
+.ring{margin:0 auto .4rem;}
+.grade{font-family:var(--font-display); font-weight:700; font-size:1.25rem;}
+.gr-scorewrap .band{font-size:.95rem; color:var(--ink-soft); max-width:38ch; margin:.3rem auto 0;}
+.gr-locked{position:relative; border:1px dashed var(--line); border-radius:var(--radius); padding:1.2rem; margin-bottom:1.2rem; overflow:hidden;}
+.gr-locked.blur .gr-blurme{filter:blur(6px); opacity:.55; user-select:none; pointer-events:none;}
+.gr-lock-overlay{position:absolute; inset:0; display:grid; place-items:center; padding:1rem; background:linear-gradient(180deg,rgba(250,245,236,.4),rgba(250,245,236,.92));}
+.gr-lock-overlay .box{text-align:center; max-width:340px;}
+.gr-lock-overlay svg{width:30px; height:30px; color:var(--clay); margin-bottom:.4rem;}
+.gr-lock-overlay h3{font-size:1.05rem; margin-bottom:.3rem;}
+.gr-lock-overlay p{font-size:.86rem; color:var(--ink-soft); margin:0 0 .9rem;}
+.gr-form{display:grid; gap:.6rem;}
+.gr-form input{ font-family:var(--font-body); font-size:1rem; color:var(--ink); background:var(--cream); border:1.5px solid var(--line); border-radius:var(--radius-sm); padding:.8rem .9rem; width:100%; transition:all .15s; }
+.gr-form input:focus{outline:none; border-color:var(--sage); box-shadow:0 0 0 3px rgba(147,160,126,.3);}
+.gr-form .err{font-size:.8rem; color:var(--error); display:none;}
+.gr-form .err.show{display:block;}
+.gr-privacy{font-size:.74rem; color:var(--ink-soft); text-align:center; margin:.2rem 0 0;}
+.gr-pillars{display:grid; gap:.9rem; margin-bottom:.4rem;}
+.gr-pillar .top{display:flex; justify-content:space-between; font-size:.9rem; margin-bottom:.3rem;}
+.gr-pillar .top .v{font-family:var(--font-display); font-weight:600;}
+.gr-track{height:9px; background:var(--sand); border-radius:999px; overflow:hidden;}
+.gr-fill{height:100%; border-radius:999px; width:0; transition:width .6s ease;}
+.gr-recs{display:grid; gap:.7rem; margin:1.2rem 0;}
+.gr-rec{display:flex; gap:.7rem; background:var(--sand); border-radius:var(--radius-sm); padding:.85rem .95rem;}
+.gr-rec .ic{width:28px; height:28px; border-radius:8px; flex:none; display:grid; place-items:center; background:var(--clay-tint); color:var(--clay-dark);}
+.gr-rec .ic svg{width:16px;height:16px;}
+.gr-rec h4{font-family:var(--font-display); font-size:.92rem; margin:0 0 .15rem; color:var(--forest-dark);}
+.gr-rec p{margin:0; font-size:.85rem; color:var(--ink-soft);}
+.gr-cta{background:var(--forest); color:var(--cream); border-radius:var(--radius); padding:1.3rem; text-align:center; margin-top:1.2rem;}
+.gr-cta h3{color:var(--cream); font-size:1.15rem; margin-bottom:.3rem;}
+.gr-cta p{color:var(--sage-tint); font-size:.9rem; margin:0 0 1rem;}
+.smpl-grader .hidden{display:none !important;}
+.demo-tag{font-size:.72rem; color:var(--ink-soft); text-align:center; padding:.5rem;}
+</style>
+</head>
+<body>
+<a class="skip-link" href="#main">Skip to content</a>
+
+<header class="site-header">
+  <div class="container nav">
+    <a class="brand" href="index.html"><span class="smpl">SMPL</span><span class="mktg">MKTG</span></a>
+    <button class="nav-toggle" aria-label="Menu" aria-controls="nav-links" aria-expanded="false">
+      <span></span><span></span><span></span>
+    </button>
+    <ul class="nav-links" id="nav-links">
+      <li><a href="index.html">Home</a></li>
+      <li><a href="services.html">Services</a></li>
+      <li><a href="about.html">About</a></li>
+      <li><a href="marketing-score.html">Marketing Score</a></li>
+      <li><a href="contact.html">Contact</a></li>
+      <li class="nav-cta"><a class="btn btn--primary" href="contact.html">Get your free plan</a></li>
+    </ul>
+  </div>
+</header>
+
+<main id="main">
+
+<section class="hero" style="padding-block:clamp(3rem,7vw,5rem);">
+  <div class="container center">
+    <p class="eyebrow" style="display:inline-block;">Free 60-second check</p>
+    <h1>What's your Marketing Health Score?</h1>
+    <p class="lead measure center">Answer 8 quick questions and get an honest read on your marketing — across SEO, paid ads, social, and strategy — plus your biggest opportunities. No call required.</p>
+  </div>
+</section>
+
+<section class="section" style="padding-top:0;">
+  <div class="container">
+
+    <div class="smpl-grader" id="grader">
+      <div class="gr-head">
+        <p class="eyebrow">Free 60-second check</p>
+        <h1>What's your Marketing Health Score?</h1>
+        <p>Answer 8 quick questions and see where your marketing is strong — and where you're leaving growth on the table.</p>
+      </div>
+      <div class="gr-prog"><span id="prog"></span></div>
+      <div class="gr-body" id="grBody"><!-- rendered by JS --></div>
+      <div class="demo-tag" id="demoTag">Free &middot; about 60 seconds &middot; no card, no call</div>
+    </div>
+
+  </div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="container">
+    <div class="footer-top">
+      <div class="footer-brand">
+        <a class="brand" href="index.html"><span class="smpl" style="color:var(--clay-tint)">SMPL</span><span class="mktg">MKTG</span></a>
+        <p>All your marketing. One simple partner. Full-service, and refreshingly clear.</p>
+      </div>
+      <div class="footer-cols">
+        <div class="footer-col">
+          <h4>Explore</h4>
+          <ul>
+            <li><a href="index.html">Home</a></li>
+            <li><a href="services.html">Services</a></li>
+            <li><a href="about.html">About</a></li>
+            <li><a href="marketing-score.html">Marketing Score</a></li>
+            <li><a href="contact.html">Contact</a></li>
+          </ul>
+        </div>
+        <div class="footer-col">
+          <h4>Get in touch</h4>
+          <ul>
+            <li><a href="mailto:Aiden@smplmktg.com">Aiden@smplmktg.com</a></li>
+            <li><a href="contact.html">Get your free plan</a></li>
+          </ul>
+        </div>
+      </div>
+    </div>
+    <div class="footer-bottom">
+      <span>&copy; <span id="year">2026</span> SMPL MKTG. All rights reserved.</span>
+      <span>Marketing, simplified.</span>
+    </div>
+  </div>
+</footer>
+
+<script>
+(function(){
+  "use strict";
+
+  var QUESTIONS=[
+    { pillar:"found", q:"How easily can new customers find you on Google?",
+      opts:[{t:"Honestly, they can't",v:0},{t:"Only if they search our exact name",v:5},{t:"We rank for what we actually sell",v:10}] },
+    { pillar:"found", q:"How often do you publish content (blog, guides, newsletter)?",
+      opts:[{t:"Never",v:0},{t:"Once in a while",v:5},{t:"Consistently, every month",v:10}] },
+    { pillar:"paid", q:"Are you running paid ads (Google, Meta, LinkedIn)?",
+      opts:[{t:"No",v:0},{t:"Yes, but I'm not sure they work",v:5},{t:"Yes, and they're profitable",v:10}] },
+    { pillar:"paid", q:"Do you know what it costs you to get one new customer?",
+      opts:[{t:"No idea",v:0},{t:"A rough guess",v:5},{t:"Yes, we track it",v:10}] },
+    { pillar:"social", q:"How consistent is your social media presence?",
+      opts:[{t:"We rarely post",v:0},{t:"A few times a month",v:5},{t:"Weekly and on-brand",v:10}] },
+    { pillar:"social", q:"Do you proactively reach out to new prospects (e.g. cold email)?",
+      opts:[{t:"No",v:0},{t:"Manually, once in a while",v:5},{t:"Yes, with a steady system",v:10}] },
+    { pillar:"strategy", q:"Can you tell which marketing brings the best return?",
+      opts:[{t:"No",v:0},{t:"Sort of",v:5},{t:"Clearly, with numbers",v:10}] },
+    { pillar:"strategy", q:"Do you have a written marketing plan for the next 90 days?",
+      opts:[{t:"No",v:0},{t:"Loosely, in my head",v:5},{t:"Yes, documented",v:10}] }
+  ];
+
+  var PILLARS={
+    found:   { label:"Getting found (SEO & content)", ic:"search" },
+    paid:    { label:"Paid ads", ic:"target" },
+    social:  { label:"Social & outreach", ic:"chat" },
+    strategy:{ label:"Strategy & tracking", ic:"chart" }
+  };
+
+  var RECS={
+    found:{
+      low:"You're nearly invisible on Google. A focused SEO + content plan puts you in front of people already searching for what you sell.",
+      mid:"You've made a start, but you're leaving easy organic traffic on the table. Consistent content compounds every single month.",
+      high:"Strong organic presence — keep feeding it. The next lever is turning that traffic into more booked calls."
+    },
+    paid:{
+      low:"You're leaving new leads to chance. Even a small, well-targeted ad budget creates a predictable flow of inquiries.",
+      mid:"You're spending but flying a bit blind. Proper tracking shows which dollar actually brings customers — and cuts the waste.",
+      high:"Your paid engine works. Scaling carefully and testing fresh creative is how you grow from here."
+    },
+    social:{
+      low:"Your brand goes quiet between posts. A simple, consistent calendar keeps you top-of-mind without eating your time.",
+      mid:"You're posting, but it's sporadic. Consistency plus light outreach turns followers into real conversations.",
+      high:"Great rhythm. Layering in systematic outbound would multiply the pipeline you're already building."
+    },
+    strategy:{
+      low:"Without tracking, every budget decision is a guess. This is the single highest-leverage fix for your marketing.",
+      mid:"You have a feel for it, but numbers beat instinct. Clear reporting and a 90-day plan make growth intentional.",
+      high:"You run marketing like an operator. A live dashboard would give you that clarity in real time, anytime."
+    }
+  };
+
+  var ICONS={
+    check:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><path d="M20 6 9 17l-5-5"/></svg>',
+    lock:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>',
+    search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
+    target:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><circle cx="12" cy="12" r="6"/><circle cx="12" cy="12" r="2"/></svg>',
+    chat:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15a2 2 0 0 1-2 2H7l-4 4V5a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2z"/></svg>',
+    chart:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M3 3v18h18"/><path d="m19 9-5 5-4-4-3 3"/></svg>'
+  };
+
+  var state={ step:-1, answers:new Array(QUESTIONS.length).fill(null), unlocked:false };
+  var body=document.getElementById("grBody");
+  var prog=document.getElementById("prog");
+  var demoTag=document.getElementById("demoTag");
+
+  function setProg(){
+    var pct = state.step<0 ? 0 : (state.step>=QUESTIONS.length ? 100 : Math.round(state.step/QUESTIONS.length*100));
+    prog.style.width=pct+"%";
+  }
+
+  function scores(){
+    var by={found:0,paid:0,social:0,strategy:0}, max={found:0,paid:0,social:0,strategy:0};
+    QUESTIONS.forEach(function(q,i){
+      max[q.pillar]+=10;
+      by[q.pillar]+= (state.answers[i]!=null ? q.opts[state.answers[i]].v : 0);
+    });
+    var pillarPct={}; var totGot=0, totMax=0;
+    Object.keys(by).forEach(function(k){ pillarPct[k]=Math.round(by[k]/max[k]*100); totGot+=by[k]; totMax+=max[k]; });
+    return { overall:Math.round(totGot/totMax*100), pillars:pillarPct };
+  }
+
+  function band(score){
+    if(score>=80) return {g:"Dialed in", t:"Your marketing is in great shape. The opportunity now is to scale what's working and stay consistent.", c:"var(--success)"};
+    if(score>=60) return {g:"Solid foundation", t:"You're doing a lot right, with a few clear gaps that are likely capping your growth.", c:"var(--forest)"};
+    if(score>=40) return {g:"Some gaps", t:"The basics are partly there, but inconsistency is leaving real growth on the table.", c:"var(--warning)"};
+    return {g:"Big opportunities", t:"There's a lot of untapped upside here — a focused plan could change your trajectory fast.", c:"var(--clay)"};
+  }
+
+  function level(pct){ return pct<=33?"low":(pct<=66?"mid":"high"); }
+
+  function renderIntro(){
+    demoTag.classList.remove("hidden");
+    body.innerHTML=''+
+    '<div class="gr-intro">'+
+      '<h2>See where you stand in 60 seconds</h2>'+
+      '<p>A quick, honest read on your marketing across the four areas that actually move revenue.</p>'+
+      '<ul class="gr-feats">'+
+        '<li>'+ICONS.check+'<span>Covers SEO, paid ads, social &amp; outreach, and strategy</span></li>'+
+        '<li>'+ICONS.check+'<span>Get a personalized score and your biggest opportunities</span></li>'+
+        '<li>'+ICONS.check+'<span>No call required — just clear, plain-English feedback</span></li>'+
+      '</ul>'+
+      '<button class="gr-btn gr-btn--primary gr-btn--full" id="startBtn">Start the check &rarr;</button>'+
+    '</div>';
+    document.getElementById("startBtn").onclick=function(){ state.step=0; render(); };
+  }
+
+  function renderQuestion(){
+    demoTag.classList.add("hidden");
+    var i=state.step, q=QUESTIONS[i], sel=state.answers[i];
+    body.innerHTML=''+
+    '<div class="gr-q">'+
+      '<div class="gr-qmeta">Question '+(i+1)+' of '+QUESTIONS.length+'</div>'+
+      '<h2>'+q.q+'</h2>'+
+      '<div class="gr-opts">'+
+        q.opts.map(function(o,idx){
+          return '<button class="gr-opt'+(sel===idx?" sel":"")+'" data-i="'+idx+'"><span class="mark"></span><span>'+o.t+'</span></button>';
+        }).join("")+
+      '</div>'+
+      '<div class="gr-nav">'+
+        '<button class="gr-btn gr-btn--ghost" id="backBtn">'+(i===0?"&larr; Intro":"&larr; Back")+'</button>'+
+        '<button class="gr-btn gr-btn--primary" id="nextBtn"'+(sel==null?" disabled":"")+'>'+(i===QUESTIONS.length-1?"See my score":"Next")+'</button>'+
+      '</div>'+
+    '</div>';
+    body.querySelectorAll(".gr-opt").forEach(function(b){
+      b.onclick=function(){
+        state.answers[i]=parseInt(b.getAttribute("data-i"),10);
+        render();
+      };
+    });
+    document.getElementById("backBtn").onclick=function(){ state.step=i-1; render(); };
+    document.getElementById("nextBtn").onclick=function(){ if(state.answers[i]==null) return; state.step=i+1; render(); };
+  }
+
+  function ringSVG(score,color){
+    var r=54, c=2*Math.PI*r, dash=score/100*c;
+    return '<svg class="ring" width="140" height="140" viewBox="0 0 140 140">'+
+      '<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="var(--sand)" stroke-width="13"/>'+
+      '<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="'+color+'" stroke-width="13" stroke-linecap="round" '+
+        'stroke-dasharray="'+dash+' '+(c-dash)+'" transform="rotate(-90 70 70)"/>'+
+      '<text x="70" y="70" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="34" fill="var(--forest-dark)">'+score+'</text>'+
+      '<text x="70" y="92" text-anchor="middle" font-family="Inter" font-size="11" fill="var(--ink-soft)">out of 100</text></svg>';
+  }
+
+  function renderResult(){
+    demoTag.classList.add("hidden");
+    var s=scores(), b=band(s.overall);
+    var order=Object.keys(s.pillars).sort(function(a,c){return s.pillars[a]-s.pillars[c];});
+    var pillarBarsHTML=Object.keys(PILLARS).map(function(k){
+      var pct=s.pillars[k];
+      var col=pct>=67?"var(--success)":(pct>=34?"var(--sage)":"var(--clay)");
+      return '<div class="gr-pillar"><div class="top"><span>'+PILLARS[k].label+'</span><span class="v">'+pct+'%</span></div>'+
+        '<div class="gr-track"><div class="gr-fill" data-w="'+pct+'" style="background:'+col+'"></div></div></div>';
+    }).join("");
+    var topTwo=order.slice(0,2);
+    var recsHTML=topTwo.map(function(k){
+      return '<div class="gr-rec"><span class="ic">'+ICONS[PILLARS[k].ic]+'</span><div><h4>'+PILLARS[k].label+'</h4><p>'+RECS[k][level(s.pillars[k])]+'</p></div></div>';
+    }).join("");
+
+    body.innerHTML=''+
+      '<div class="gr-scorewrap">'+ringSVG(s.overall,b.c)+
+        '<div class="grade" style="color:'+b.c+'">'+b.g+'</div>'+
+        '<p class="band">'+b.t+'</p>'+
+      '</div>'+
+      (state.unlocked
+        ?
+          '<h3 style="margin-bottom:.7rem; font-size:1.05rem;">Your breakdown by area</h3>'+
+          '<div class="gr-pillars">'+pillarBarsHTML+'</div>'+
+          '<h3 style="margin:1.3rem 0 .2rem; font-size:1.05rem;">Your biggest opportunities</h3>'+
+          '<div class="gr-recs">'+recsHTML+'</div>'+
+          '<div class="gr-cta"><h3>Want SMPL MKTG to handle this for you?</h3>'+
+            '<p>One simple partner for all of it — and a live dashboard so you always see where your budget goes.</p>'+
+            '<button class="gr-btn gr-btn--clay gr-btn--full" id="ctaBtn">Get your free custom marketing plan</button></div>'+
+          '<p class="gr-privacy" style="margin-top:1rem"><a href="#" id="restart" style="color:var(--clay)">Retake the check</a></p>'
+        :
+          '<div class="gr-locked blur">'+
+            '<div class="gr-blurme">'+
+              '<h3 style="margin-bottom:.7rem; font-size:1.05rem;">Your breakdown by area</h3>'+
+              '<div class="gr-pillars">'+pillarBarsHTML+'</div>'+
+            '</div>'+
+            '<div class="gr-lock-overlay"><div class="box">'+ICONS.lock+
+              '<h3>Unlock your full breakdown</h3>'+
+              '<p>See your score in each area plus your top opportunities. We\'ll email a copy too.</p>'+
+              '<form class="gr-form" id="emailForm" novalidate>'+
+                '<input type="email" id="emailInput" placeholder="you@company.com" autocomplete="email" required>'+
+                '<div class="err" id="emailErr">Please enter a valid email.</div>'+
+                '<button type="submit" class="gr-btn gr-btn--clay gr-btn--full">Show my results &rarr;</button>'+
+              '</form>'+
+              '<p class="gr-privacy">No spam. Unsubscribe anytime.</p>'+
+            '</div></div>'+
+          '</div>'+
+          '<p class="gr-privacy"><a href="#" id="restart" style="color:var(--clay)">Start over</a></p>'
+      );
+
+    requestAnimationFrame(function(){
+      body.querySelectorAll(".gr-fill").forEach(function(f){ f.style.width=f.getAttribute("data-w")+"%"; });
+    });
+
+    var rs=document.getElementById("restart");
+    if(rs) rs.onclick=function(e){ e.preventDefault(); state.step=-1; state.unlocked=false; state.answers=new Array(QUESTIONS.length).fill(null); render(); };
+
+    var cta=document.getElementById("ctaBtn");
+    if(cta) cta.onclick=function(){ window.location.href="contact.html"; };
+
+    var form=document.getElementById("emailForm");
+    if(form){
+      form.onsubmit=function(e){
+        e.preventDefault();
+        var input=document.getElementById("emailInput");
+        var ok=/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(input.value.trim());
+        if(!ok){ document.getElementById("emailErr").classList.add("show"); return; }
+
+        /* Send the lead to Web3Forms (same setup as the contact form).
+           Paste your free key below. Results unlock even if the POST fails. */
+        var sc=scores();
+        var weakest=Object.keys(sc.pillars).sort(function(a,c){return sc.pillars[a]-sc.pillars[c];}).slice(0,2).map(function(k){return PILLARS[k].label;}).join(", ");
+        var breakdown=Object.keys(PILLARS).map(function(k){return PILLARS[k].label+" "+sc.pillars[k]+"%";}).join(" · ");
+        var answersStr=QUESTIONS.map(function(q,idx){return "Q"+(idx+1)+":"+(state.answers[idx]!=null?q.opts[state.answers[idx]].v:0);}).join(", ");
+        var fd=new FormData();
+        fd.append("access_key","c4710dcb-b8bf-49f3-93f7-98ae6fb1ec0a");
+        fd.append("subject","New Marketing Health Score lead");
+        fd.append("from_name","SMPL MKTG Grader");
+        fd.append("email",input.value.trim());
+        fd.append("score",sc.overall);
+        fd.append("breakdown",breakdown);
+        fd.append("weakest_areas",weakest);
+        fd.append("answers",answersStr);
+        fd.append("botcheck","");
+        fetch("https://api.web3forms.com/submit",{method:"POST",headers:{Accept:"application/json"},body:fd}).catch(function(){});
+
+        state.unlocked=true;
+        render();
+      };
+    }
+  }
+
+  function render(){
+    setProg();
+    if(state.step<0) renderIntro();
+    else if(state.step>=QUESTIONS.length) renderResult();
+    else renderQuestion();
+  }
+
+  render();
+})();
+</script>
+<script src="assets/js/main.js"></script>
+</body>
+</html>
