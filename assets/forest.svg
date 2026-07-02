@@ -1,0 +1,95 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 1200 2200" preserveAspectRatio="xMidYMid slice" role="img" aria-label="A faint layered sequoia forest">
+  <!-- ============ CANOPY (top) ============ -->
+  <!-- distant haze (lightest, farthest) -->
+  <g fill="#93A07E" opacity="0.085">
+    <ellipse cx="300" cy="170" rx="340" ry="150"/>
+    <ellipse cx="840" cy="150" rx="380" ry="155"/>
+    <ellipse cx="1090" cy="250" rx="250" ry="130"/>
+    <ellipse cx="120" cy="280" rx="220" ry="120"/>
+  </g>
+  <!-- mid conifer ridge -->
+  <g fill="#4E5D43" opacity="0.12">
+    <path d="M140,300 L215,560 L65,560 Z"/>
+    <path d="M300,200 L395,560 L205,560 Z"/>
+    <path d="M470,270 L552,560 L388,560 Z"/>
+    <path d="M640,140 L747,560 L533,560 Z"/>
+    <path d="M820,230 L910,560 L730,560 Z"/>
+    <path d="M980,180 L1080,560 L880,560 Z"/>
+    <path d="M1120,300 L1195,560 L1045,560 Z"/>
+  </g>
+  <!-- near treetops (darkest, closest) -->
+  <g fill="#36412F" opacity="0.10">
+    <path d="M240,360 L300,560 L180,560 Z"/>
+    <path d="M900,340 L975,560 L825,560 Z"/>
+    <path d="M540,330 L605,560 L475,560 Z"/>
+  </g>
+  <!-- dappled light through the leaves -->
+  <g fill="#FAF5EC" opacity="0.5">
+    <circle cx="520" cy="260" r="6"/><circle cx="700" cy="300" r="5"/>
+    <circle cx="380" cy="330" r="5"/><circle cx="860" cy="280" r="6"/>
+    <circle cx="1010" cy="320" r="4"/><circle cx="640" cy="360" r="5"/>
+  </g>
+
+  <!-- ============ TRUNKS (mid) ============ -->
+  <!-- background slim trunks (faint, far) -->
+  <g fill="#93A07E" opacity="0.10">
+    <path d="M244,520 L240,1520 L260,1520 L256,520 Z"/>
+    <path d="M466,520 L462,1520 L480,1520 L474,520 Z"/>
+    <path d="M716,520 L711,1520 L731,1520 L726,520 Z"/>
+    <path d="M958,520 L954,1520 L974,1520 L968,520 Z"/>
+  </g>
+  <!-- center sequoia (medium) -->
+  <g fill="#4E5D43" opacity="0.10">
+    <path d="M623,480 L614,1540 L666,1540 L657,480 Z"/>
+  </g>
+  <!-- foreground framing trunks (near, strongest) -->
+  <g fill="#36412F" opacity="0.11">
+    <path d="M75,320 L55,1560 L165,1560 L145,320 Z"/>
+    <path d="M1055,340 L1045,1560 L1149,1560 L1129,340 Z"/>
+    <!-- a few suggested limbs near the canopy -->
+    <path d="M120,470 L250,430 L256,452 L128,512 Z"/>
+    <path d="M1100,500 L975,455 L969,477 L1094,540 Z"/>
+  </g>
+  <!-- subtle bark lines -->
+  <g stroke="#36412F" stroke-width="2" opacity="0.05" fill="none" stroke-linecap="round">
+    <path d="M92,400 L78,1540"/><path d="M128,400 L120,1540"/>
+    <path d="M1072,420 L1064,1540"/><path d="M1108,420 L1118,1540"/>
+    <path d="M636,520 L630,1520"/>
+  </g>
+
+  <!-- ============ FOREST FLOOR ============ -->
+  <!-- soil mass -->
+  <path d="M0,1612 C200,1576 420,1600 620,1584 C820,1568 1020,1602 1200,1576 L1200,2200 L0,2200 Z" fill="#E4D8C3" opacity="0.10"/>
+  <!-- grass shadow line -->
+  <path d="M0,1612 C200,1576 420,1600 620,1584 C820,1568 1020,1602 1200,1576" stroke="#4E5D43" stroke-width="3" opacity="0.10" fill="none"/>
+  <!-- undergrowth: ferns + low bushes -->
+  <g opacity="0.12" fill="#4E5D43">
+    <ellipse cx="300" cy="1592" rx="46" ry="20"/><ellipse cx="345" cy="1598" rx="34" ry="16"/>
+    <ellipse cx="780" cy="1586" rx="50" ry="22"/><ellipse cx="828" cy="1594" rx="32" ry="15"/>
+    <ellipse cx="980" cy="1596" rx="40" ry="18"/>
+  </g>
+  <g stroke="#4E5D43" stroke-width="3" opacity="0.13" fill="none" stroke-linecap="round">
+    <path d="M430,1600 C430,1560 444,1540 470,1528 M430,1600 C430,1556 416,1538 392,1528 M430,1600 L430,1556"/>
+    <path d="M660,1592 C660,1552 674,1532 700,1520 M660,1592 C660,1548 646,1530 622,1520 M660,1592 L660,1548"/>
+    <path d="M150,1606 C150,1572 162,1556 184,1546 M150,1606 C150,1570 138,1556 118,1548"/>
+  </g>
+
+  <!-- ============ ROOTS (bottom) ============ -->
+  <g stroke="#6B4028" fill="none" stroke-linecap="round" opacity="0.13">
+    <!-- left trunk roots -->
+    <path d="M110,1560 C70,1700 42,1810 -10,1995" stroke-width="9"/>
+    <path d="M110,1560 C150,1700 205,1822 278,2010" stroke-width="8"/>
+    <path d="M110,1560 C112,1720 120,1872 130,2070" stroke-width="6"/>
+    <path d="M70,1760 C40,1800 8,1820 -30,1880" stroke-width="3"/>
+    <path d="M200,1800 C230,1840 250,1860 300,1900" stroke-width="3"/>
+    <!-- center roots -->
+    <path d="M640,1540 C600,1690 558,1812 516,1995" stroke-width="7"/>
+    <path d="M640,1540 C680,1690 722,1812 766,1995" stroke-width="7"/>
+    <path d="M640,1540 C640,1710 640,1872 640,2040" stroke-width="5"/>
+    <!-- right trunk roots -->
+    <path d="M1095,1560 C1135,1700 1162,1810 1212,1995" stroke-width="9"/>
+    <path d="M1095,1560 C1055,1700 1000,1822 928,2010" stroke-width="8"/>
+    <path d="M1095,1560 C1093,1720 1086,1872 1078,2070" stroke-width="6"/>
+    <path d="M1010,1800 C980,1840 958,1860 910,1900" stroke-width="3"/>
+  </g>
+</svg>
