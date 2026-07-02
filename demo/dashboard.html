@@ -1,0 +1,509 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>SMPL MKTG — Client Dashboard Demo</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@500;600;700&family=Inter:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+/* ============================================================
+   SMPL MKTG — Client Dashboard Demo widget
+   Self-contained. Grounded Forest brand tokens inlined so this
+   file works standalone AND when dropped into the live site.
+   ============================================================ */
+:root{
+  --forest:#4E5D43; --forest-dark:#36412F; --forest-mid:#6E7D58; --forest-tint:#DCE2D2;
+  --sage:#93A07E; --sage-deep:#525E41; --sage-tint:#DDE3D3;
+  --clay:#8C5A3C; --clay-dark:#6B4028; --clay-tint:#EAD9C9;
+  --sand:#E4D8C3; --cream:#FAF5EC; --espresso:#2C2823;
+  --success:#5E8C61; --warning:#D99A4E; --error:#B23A2E; --info:#5F8079;
+  --ink:var(--espresso); --ink-soft:#5b554d; --line:#e0d6c4;
+  --font-display:"Poppins",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --font-body:"Inter",system-ui,-apple-system,"Segoe UI",sans-serif;
+  --radius:14px; --radius-sm:9px;
+  --shadow:0 1px 2px rgba(44,40,35,.05),0 8px 24px rgba(44,40,35,.06);
+}
+*,*::before,*::after{box-sizing:border-box;}
+.smpl-dash{
+  font-family:var(--font-body); color:var(--ink); background:var(--cream);
+  border:1px solid var(--line); border-radius:var(--radius); overflow:hidden;
+  max-width:1100px; margin:0 auto; box-shadow:var(--shadow); line-height:1.5;
+}
+.smpl-dash *{box-sizing:border-box;}
+.smpl-dash h1,.smpl-dash h2,.smpl-dash h3,.smpl-dash h4{
+  font-family:var(--font-display); font-weight:600; color:var(--forest-dark);
+  margin:0; line-height:1.2; letter-spacing:-.01em;
+}
+
+/* Demo ribbon */
+.demo-ribbon{
+  background:var(--clay); color:var(--cream); font-family:var(--font-display);
+  font-weight:500; font-size:.8rem; text-align:center; padding:.5rem 1rem;
+  letter-spacing:.02em;
+}
+.demo-ribbon strong{color:var(--cream); font-weight:700;}
+
+/* Client header */
+.dash-head{
+  background:var(--forest); color:var(--cream); padding:1.4rem 1.6rem;
+  display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between;
+}
+.dash-client{display:flex; align-items:center; gap:.9rem;}
+.dash-logo{
+  width:46px; height:46px; border-radius:11px; background:var(--cream);
+  display:grid; place-items:center; font-family:var(--font-display); font-weight:700;
+  color:var(--forest); font-size:1.05rem; flex:none;
+}
+.dash-client h1{color:var(--cream); font-size:1.3rem;}
+.dash-client p{margin:.1rem 0 0; color:var(--sage-tint); font-size:.85rem;}
+.dash-meta{text-align:right; font-size:.8rem; color:var(--sage-tint);}
+.dash-meta .updated{display:inline-flex; align-items:center; gap:.35rem;}
+.dot-live{width:8px; height:8px; border-radius:50%; background:#9fe0a3; display:inline-block; box-shadow:0 0 0 0 rgba(159,224,163,.7); animation:pulse 2s infinite;}
+@keyframes pulse{0%{box-shadow:0 0 0 0 rgba(159,224,163,.6);}70%{box-shadow:0 0 0 7px rgba(159,224,163,0);}100%{box-shadow:0 0 0 0 rgba(159,224,163,0);}}
+
+/* Controls bar */
+.dash-controls{
+  display:flex; flex-wrap:wrap; gap:1rem; align-items:center; justify-content:space-between;
+  padding:1rem 1.6rem; background:var(--sand); border-bottom:1px solid var(--line);
+}
+.range-toggle{display:inline-flex; background:var(--cream); border:1px solid var(--line); border-radius:999px; padding:.2rem;}
+.range-toggle button{
+  font-family:var(--font-display); font-weight:500; font-size:.82rem; color:var(--ink-soft);
+  background:transparent; border:0; padding:.4rem .9rem; border-radius:999px; cursor:pointer; transition:all .15s;
+}
+.range-toggle button.active{background:var(--forest); color:var(--cream);}
+.dash-hint{font-size:.8rem; color:var(--ink-soft);}
+
+/* Tabs */
+.dash-tabs{display:flex; gap:.2rem; padding:0 1.6rem; background:var(--cream); border-bottom:1px solid var(--line); overflow-x:auto;}
+.dash-tabs button{
+  font-family:var(--font-display); font-weight:500; font-size:.9rem; color:var(--ink-soft);
+  background:transparent; border:0; border-bottom:2.5px solid transparent; padding:.95rem .9rem; cursor:pointer; white-space:nowrap; transition:all .15s;
+}
+.dash-tabs button:hover{color:var(--forest);}
+.dash-tabs button.active{color:var(--forest-dark); border-bottom-color:var(--clay);}
+
+/* Body */
+.dash-body{padding:1.6rem;}
+.panel{display:none;}
+.panel.active{display:block; animation:fade .25s ease;}
+@keyframes fade{from{opacity:0; transform:translateY(4px);}to{opacity:1; transform:none;}}
+
+/* KPI cards */
+.kpi-row{display:grid; grid-template-columns:repeat(4,1fr); gap:1rem; margin-bottom:1.4rem;}
+.kpi{background:var(--cream); border:1px solid var(--line); border-radius:var(--radius-sm); padding:1.1rem;}
+.kpi .label{font-size:.78rem; color:var(--ink-soft); font-weight:500;}
+.kpi .val{font-family:var(--font-display); font-weight:700; font-size:1.7rem; color:var(--forest-dark); margin:.25rem 0 .15rem; line-height:1;}
+.kpi .delta{font-size:.78rem; font-weight:600; display:inline-flex; align-items:center; gap:.25rem;}
+.delta.up{color:var(--success);} .delta.down{color:var(--error);} .delta.flat{color:var(--ink-soft);}
+
+/* Generic cards / grid */
+.row{display:grid; gap:1rem; margin-bottom:1.4rem;}
+.row.c2{grid-template-columns:1fr 1fr;}
+.row.c2-wide{grid-template-columns:1.4fr 1fr;}
+.card{background:var(--cream); border:1px solid var(--line); border-radius:var(--radius); padding:1.3rem;}
+.card.sand{background:var(--sand);}
+.card h3{font-size:1.02rem; margin-bottom:.2rem;}
+.card .sub{font-size:.82rem; color:var(--ink-soft); margin:0 0 1rem;}
+
+/* Budget / donut */
+.budget{display:flex; gap:1.4rem; align-items:center; flex-wrap:wrap;}
+.donut{flex:none;}
+.legend{display:grid; gap:.6rem; flex:1; min-width:180px;}
+.legend-item{display:flex; align-items:center; gap:.6rem; font-size:.88rem;}
+.legend-item .sw{width:12px; height:12px; border-radius:3px; flex:none;}
+.legend-item .nm{flex:1; color:var(--ink);}
+.legend-item .amt{font-family:var(--font-display); font-weight:600; color:var(--forest-dark);}
+
+/* Bars */
+.bars{display:grid; gap:.85rem;}
+.bar-row .bar-top{display:flex; justify-content:space-between; font-size:.85rem; margin-bottom:.3rem;}
+.bar-row .bar-top .v{font-family:var(--font-display); font-weight:600; color:var(--forest-dark);}
+.bar-track{height:9px; background:var(--sand); border-radius:999px; overflow:hidden;}
+.bar-fill{height:100%; border-radius:999px;}
+
+/* mini metric list */
+.mlist{display:grid; grid-template-columns:1fr 1fr; gap:.9rem 1.4rem;}
+.mlist .m .l{font-size:.78rem; color:var(--ink-soft);}
+.mlist .m .v{font-family:var(--font-display); font-weight:600; font-size:1.15rem; color:var(--forest-dark);}
+
+/* Activity / calendar lists */
+.feed{display:grid; gap:.7rem;}
+.feed-item{display:flex; gap:.7rem; align-items:flex-start; font-size:.9rem;}
+.feed-item .ic{width:26px; height:26px; border-radius:7px; flex:none; display:grid; place-items:center; background:var(--forest-tint); color:var(--forest-dark);}
+.feed-item .ic svg{width:15px; height:15px;}
+.feed-item.next .ic{background:var(--clay-tint); color:var(--clay-dark);}
+.cal{display:grid; gap:.55rem;}
+.cal-row{display:flex; align-items:center; gap:.7rem; font-size:.88rem; padding:.5rem .65rem; background:var(--cream); border:1px solid var(--line); border-radius:var(--radius-sm);}
+.cal-row .chip{font-family:var(--font-display); font-weight:600; font-size:.7rem; padding:.18rem .5rem; border-radius:999px; flex:none;}
+.chip.ig{background:#fbe4d8; color:#9a4a23;}
+.chip.li{background:var(--sage-tint); color:var(--sage-deep);}
+.cal-row .d{margin-left:auto; color:var(--ink-soft); font-size:.78rem; flex:none;}
+.cal-row .st{font-size:.7rem; font-weight:600; padding:.15rem .45rem; border-radius:999px; flex:none;}
+.st.done{background:#e3efe4; color:#2f5b32;} .st.sched{background:var(--sand); color:var(--sage-deep);}
+
+/* trend chart */
+.chart-wrap{width:100%;}
+svg.line{width:100%; height:auto; display:block;}
+.tag-up{color:var(--success); font-weight:600;} .tag-down{color:var(--error); font-weight:600;}
+
+/* keyword table */
+.kw{width:100%; border-collapse:collapse; font-size:.88rem;}
+.kw th{text-align:left; font-family:var(--font-display); font-weight:600; color:var(--ink-soft); font-size:.76rem; text-transform:uppercase; letter-spacing:.04em; padding:.5rem .4rem; border-bottom:1px solid var(--line);}
+.kw td{padding:.6rem .4rem; border-bottom:1px solid var(--line);}
+.kw tr:last-child td{border-bottom:0;}
+.kw .pos{font-family:var(--font-display); font-weight:600; color:var(--forest-dark);}
+
+.note{font-size:.82rem; color:var(--ink-soft); background:var(--sage-tint); border-radius:var(--radius-sm); padding:.7rem .9rem; margin-top:.2rem;}
+
+@media (max-width:780px){
+  .kpi-row{grid-template-columns:1fr 1fr;}
+  .row.c2,.row.c2-wide{grid-template-columns:1fr;}
+}
+@media (max-width:460px){
+  .mlist{grid-template-columns:1fr;}
+}
+</style>
+</head>
+<body style="margin:0; padding:24px; background:#efe7d8;">
+
+<div class="smpl-dash" id="smplDash">
+  <div class="demo-ribbon">Interactive demo &middot; <strong>sample data</strong> &middot; this is what every SMPL MKTG client sees at their own private link</div>
+
+  <!-- Client header -->
+  <div class="dash-head">
+    <div class="dash-client">
+      <div class="dash-logo">FF</div>
+      <div>
+        <h1>FieldFlow</h1>
+        <p>Marketing overview &middot; fieldflow.smplmktg.com</p>
+      </div>
+    </div>
+    <div class="dash-meta">
+      <div class="updated"><span class="dot-live"></span> Updated today, 6:00 AM</div>
+      <div style="margin-top:.2rem;">Managed by SMPL MKTG</div>
+    </div>
+  </div>
+
+  <!-- Controls -->
+  <div class="dash-controls">
+    <div class="range-toggle" id="rangeToggle">
+      <button data-range="month" class="active">This month</button>
+      <button data-range="qtr">Last 3 months</button>
+      <button data-range="ytd">Year to date</button>
+    </div>
+    <div class="dash-hint">Plain-English view of where your budget goes &mdash; no jargon.</div>
+  </div>
+
+  <!-- Tabs -->
+  <div class="dash-tabs" id="dashTabs">
+    <button data-tab="overview" class="active">Overview</button>
+    <button data-tab="paid">Paid ads</button>
+    <button data-tab="outbound">Outbound email</button>
+    <button data-tab="social">Social</button>
+    <button data-tab="seo">SEO &amp; website</button>
+  </div>
+
+  <div class="dash-body" id="dashBody"><!-- rendered by JS --></div>
+</div>
+
+<script>
+(function(){
+  "use strict";
+
+  // ---- Sample data per range -------------------------------------------------
+  var DATA = {
+    month: {
+      label:"June 2026",
+      kpis:{ spend:6200, leads:47, cpl:132, meetings:11 },
+      kpiDelta:{ spend:"+4%", leads:"+15%", cpl:"-9%", meetings:"+3" },
+      kpiDir:{ spend:"flat", leads:"up", cpl:"up", meetings:"up" },
+      budget:[ {n:"Paid ads",v:3400,c:"var(--forest)"},{n:"Social content",v:1100,c:"var(--sage)"},{n:"Outbound email",v:900,c:"var(--clay)"},{n:"SEO & website",v:800,c:"var(--info)"} ],
+      paid:{ spend:3400, impressions:"142K", clicks:"3,180", ctr:"2.2%", cpc:"$1.07", leads:22, cpl:"$155",
+        channels:[ {n:"Google Ads",v:1900,c:"var(--forest)"},{n:"Meta (FB/IG)",v:1500,c:"var(--sage)"} ] },
+      outbound:{ sent:"4,800", reply:"4.1%", positive:38, meetings:9,
+        seq:[ {n:"SaaS founders — cold",v:62,c:"var(--forest)"},{n:"Agency owners — cold",v:38,c:"var(--clay)"} ] },
+      social:{ posts:18, ig:10, li:8, followers:"+312", eng:"5.4%", reach:"28.4K" },
+      seo:{ visitors:"2,140", visitorsDelta:"+18%", top10:14, top10Delta:"+3", leads:10,
+        trend:[1100,1280,1450,1700,1820,2140],
+        kws:[ {k:"field service scheduling software",p:8,d:5,u:true},{k:"job tracking app for contractors",p:12,d:3,u:true},{k:"crew dispatch software",p:6,d:2,u:true},{k:"best field service app",p:19,d:-4,u:false} ] },
+      leadTrend:[22,28,31,35,41,47]
+    },
+    qtr: {
+      label:"Apr–Jun 2026",
+      kpis:{ spend:18100, leads:119, cpl:152, meetings:27 },
+      kpiDelta:{ spend:"+11%", leads:"+22%", cpl:"-6%", meetings:"+8" },
+      kpiDir:{ spend:"flat", leads:"up", cpl:"up", meetings:"up" },
+      budget:[ {n:"Paid ads",v:9800,c:"var(--forest)"},{n:"Social content",v:3300,c:"var(--sage)"},{n:"Outbound email",v:2700,c:"var(--clay)"},{n:"SEO & website",v:2300,c:"var(--info)"} ],
+      paid:{ spend:9800, impressions:"410K", clicks:"9,040", ctr:"2.2%", cpc:"$1.08", leads:61, cpl:"$161",
+        channels:[ {n:"Google Ads",v:5600,c:"var(--forest)"},{n:"Meta (FB/IG)",v:4200,c:"var(--sage)"} ] },
+      outbound:{ sent:"14,200", reply:"3.9%", positive:104, meetings:23,
+        seq:[ {n:"SaaS founders — cold",v:58,c:"var(--forest)"},{n:"Agency owners — cold",v:42,c:"var(--clay)"} ] },
+      social:{ posts:54, ig:30, li:24, followers:"+910", eng:"5.1%", reach:"86.2K" },
+      seo:{ visitors:"5,470", visitorsDelta:"+34%", top10:14, top10Delta:"+7", leads:28,
+        trend:[820,980,1180,1450,1820,2140],
+        kws:[ {k:"field service scheduling software",p:8,d:11,u:true},{k:"job tracking app for contractors",p:12,d:6,u:true},{k:"crew dispatch software",p:6,d:9,u:true},{k:"best field service app",p:19,d:-2,u:false} ] },
+      leadTrend:[31,35,41,38,44,47]
+    },
+    ytd: {
+      label:"Jan–Jun 2026",
+      kpis:{ spend:34800, leads:228, cpl:153, meetings:51 },
+      kpiDelta:{ spend:"+19%", leads:"+41%", cpl:"-12%", meetings:"+19" },
+      kpiDir:{ spend:"flat", leads:"up", cpl:"up", meetings:"up" },
+      budget:[ {n:"Paid ads",v:18600,c:"var(--forest)"},{n:"Social content",v:6600,c:"var(--sage)"},{n:"Outbound email",v:5400,c:"var(--clay)"},{n:"SEO & website",v:4200,c:"var(--info)"} ],
+      paid:{ spend:18600, impressions:"790K", clicks:"17,100", ctr:"2.2%", cpc:"$1.09", leads:118, cpl:"$158",
+        channels:[ {n:"Google Ads",v:10800,c:"var(--forest)"},{n:"Meta (FB/IG)",v:7800,c:"var(--sage)"} ] },
+      outbound:{ sent:"26,400", reply:"3.8%", positive:191, meetings:42,
+        seq:[ {n:"SaaS founders — cold",v:55,c:"var(--forest)"},{n:"Agency owners — cold",v:45,c:"var(--clay)"} ] },
+      social:{ posts:101, ig:56, li:45, followers:"+1,740", eng:"4.9%", reach:"158K" },
+      seo:{ visitors:"9,120", visitorsDelta:"+52%", top10:14, top10Delta:"+11", leads:53,
+        trend:[600,720,820,980,1180,2140],
+        kws:[ {k:"field service scheduling software",p:8,d:24,u:true},{k:"job tracking app for contractors",p:12,d:14,u:true},{k:"crew dispatch software",p:6,d:18,u:true},{k:"best field service app",p:19,d:5,u:true} ] },
+      leadTrend:[18,24,31,35,41,47]
+    }
+  };
+
+  var ACTIVITY = [
+    {t:"Launched the summer Google Ads campaign (3 new ad sets)", ic:"rocket"},
+    {t:"Published 18 social posts across Instagram &amp; LinkedIn", ic:"image"},
+    {t:"Sent 4,800 outbound emails across 2 cold sequences", ic:"mail"},
+    {t:"Optimized 3 landing pages &amp; fixed homepage load speed", ic:"page"},
+    {t:"Reached page 1 of Google for “field service scheduling software”", ic:"search"}
+  ];
+  var NEXT = [
+    {t:"A/B test new ad creative against the top performer", ic:"split"},
+    {t:"Launch a LinkedIn thought-leadership series for the founder", ic:"image"},
+    {t:"Publish 2 SEO blog posts targeting contractor keywords", ic:"page"},
+    {t:"Refresh the outbound list with 1,500 new qualified contacts", ic:"mail"}
+  ];
+  var CALENDAR = [
+    {ch:"ig", t:"Customer win: ProTeam Plumbing case study", d:"Jun 27", st:"sched"},
+    {ch:"li", t:"“5 signs your crew scheduling is costing you”", d:"Jun 28", st:"sched"},
+    {ch:"ig", t:"Feature reel: new dispatch board", d:"Jun 30", st:"sched"},
+    {ch:"li", t:"Founder POV: field service trends 2026", d:"Jul 2", st:"sched"},
+    {ch:"ig", t:"Behind the scenes: support team", d:"Jun 24", st:"done"}
+  ];
+
+  // ---- Icons -----------------------------------------------------------------
+  var ICONS = {
+    rocket:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="M12 15l-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/></svg>',
+    image:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="18" height="18" rx="2"/><circle cx="9" cy="9" r="2"/><path d="m21 15-3.09-3.09a2 2 0 0 0-2.82 0L6 21"/></svg>',
+    mail:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="2" y="4" width="20" height="16" rx="2"/><path d="m22 7-10 5L2 7"/></svg>',
+    page:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>',
+    search:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.3-4.3"/></svg>',
+    split:'<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 3h5v5"/><path d="M8 3H3v5"/><path d="M21 3 3 21"/></svg>'
+  };
+
+  var state={ range:"month", tab:"overview" };
+  var body=document.getElementById("dashBody");
+
+  function money(n){ return "$"+n.toLocaleString("en-US"); }
+
+  // Donut SVG from segments
+  function donut(segs){
+    var total=segs.reduce(function(s,x){return s+x.v;},0);
+    var r=52, c=2*Math.PI*r, off=0, parts="";
+    segs.forEach(function(s){
+      var frac=s.v/total, len=frac*c;
+      parts+='<circle cx="70" cy="70" r="'+r+'" fill="none" stroke="'+s.c+'" stroke-width="22" '+
+             'stroke-dasharray="'+len+' '+(c-len)+'" stroke-dashoffset="'+(-off)+'" transform="rotate(-90 70 70)"/>';
+      off+=len;
+    });
+    return '<svg class="donut" width="140" height="140" viewBox="0 0 140 140">'+parts+
+      '<text x="70" y="65" text-anchor="middle" font-family="Poppins" font-weight="700" font-size="20" fill="var(--forest-dark)">'+money(total)+'</text>'+
+      '<text x="70" y="84" text-anchor="middle" font-family="Inter" font-size="10" fill="var(--ink-soft)">total spend</text></svg>';
+  }
+
+  function legend(segs){
+    var total=segs.reduce(function(s,x){return s+x.v;},0);
+    return '<div class="legend">'+segs.map(function(s){
+      var pct=Math.round(s.v/total*100);
+      return '<div class="legend-item"><span class="sw" style="background:'+s.c+'"></span>'+
+        '<span class="nm">'+s.n+'</span><span class="amt">'+money(s.v)+' <span style="color:var(--ink-soft);font-weight:400">('+pct+'%)</span></span></div>';
+    }).join("")+'</div>';
+  }
+
+  function bars(segs,unit){
+    var max=Math.max.apply(null,segs.map(function(s){return s.v;}));
+    return '<div class="bars">'+segs.map(function(s){
+      var w=Math.round(s.v/max*100);
+      var val=unit==="$"?money(s.v):(unit==="%"?s.v+"%":s.v);
+      return '<div class="bar-row"><div class="bar-top"><span>'+s.n+'</span><span class="v">'+val+'</span></div>'+
+        '<div class="bar-track"><div class="bar-fill" style="width:'+w+'%;background:'+s.c+'"></div></div></div>';
+    }).join("")+'</div>';
+  }
+
+  // Line chart SVG
+  function line(vals,labels){
+    var W=460,H=150,pad=24, max=Math.max.apply(null,vals), min=Math.min.apply(null,vals);
+    var span=(max-min)||1;
+    var step=(W-pad*2)/(vals.length-1);
+    var pts=vals.map(function(v,i){
+      var x=pad+i*step, y=H-pad-((v-min)/span)*(H-pad*2);
+      return [x,y];
+    });
+    var d=pts.map(function(p,i){return (i?"L":"M")+p[0].toFixed(1)+" "+p[1].toFixed(1);}).join(" ");
+    var area=d+" L"+pts[pts.length-1][0].toFixed(1)+" "+(H-pad)+" L"+pad+" "+(H-pad)+" Z";
+    var dots=pts.map(function(p){return '<circle cx="'+p[0].toFixed(1)+'" cy="'+p[1].toFixed(1)+'" r="3.5" fill="var(--forest)"/>';}).join("");
+    var lab=(labels||[]).map(function(t,i){return '<text x="'+pts[i][0].toFixed(1)+'" y="'+(H-6)+'" text-anchor="middle" font-family="Inter" font-size="10" fill="var(--ink-soft)">'+t+'</text>';}).join("");
+    return '<div class="chart-wrap"><svg class="line" viewBox="0 0 '+W+' '+H+'" preserveAspectRatio="xMidYMid meet">'+
+      '<defs><linearGradient id="gfill" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="var(--forest)" stop-opacity=".22"/><stop offset="1" stop-color="var(--forest)" stop-opacity="0"/></linearGradient></defs>'+
+      '<path d="'+area+'" fill="url(#gfill)"/>'+
+      '<path d="'+d+'" fill="none" stroke="var(--forest)" stroke-width="2.5" stroke-linejoin="round" stroke-linecap="round"/>'+
+      dots+lab+'</svg></div>';
+  }
+
+  function deltaSpan(txt,dir){ return '<span class="delta '+dir+'">'+(dir==="up"?"▲":dir==="down"?"▼":"●")+" "+txt+'</span>'; }
+
+  var MONTHS6=["Jan","Feb","Mar","Apr","May","Jun"];
+
+  // ---- Renderers per tab -----------------------------------------------------
+  function renderOverview(d){
+    var k=d.kpis, kd=d.kpiDelta, dir=d.kpiDir;
+    return ''+
+    '<div class="kpi-row">'+
+      kpi("Total spend",money(k.spend),kd.spend,"flat")+
+      kpi("Leads generated",k.leads,kd.leads,"up")+
+      kpi("Cost per lead",money(k.cpl),kd.cpl,"up")+
+      kpi("Meetings booked",k.meetings,kd.meetings,"up")+
+    '</div>'+
+    '<div class="row c2-wide">'+
+      '<div class="card"><h3>Where your budget went</h3><p class="sub">'+d.label+'</p>'+
+        '<div class="budget">'+donut(d.budget)+legend(d.budget)+'</div></div>'+
+      '<div class="card"><h3>Leads over time</h3><p class="sub">Last 6 months</p>'+line(d.leadTrend,MONTHS6)+
+        '<div class="note">Up from '+d.leadTrend[0]+' to '+d.leadTrend[5]+' leads/mo — steady growth across every channel.</div></div>'+
+    '</div>'+
+    '<div class="row c2">'+
+      '<div class="card sand"><h3>What we did this period</h3><p class="sub">Plain English, no jargon</p>'+feed(ACTIVITY,false)+'</div>'+
+      '<div class="card sand"><h3>What’s next</h3><p class="sub">Coming up</p>'+feed(NEXT,true)+'</div>'+
+    '</div>';
+  }
+
+  function renderPaid(d){
+    var p=d.paid;
+    return ''+
+    '<div class="kpi-row">'+
+      kpi("Ad spend",money(p.spend),"","flat")+
+      kpi("Leads from ads",p.leads,"","up")+
+      kpi("Cost per lead",p.cpl,"","up")+
+      kpi("Cost per click",p.cpc,"","flat")+
+    '</div>'+
+    '<div class="row c2">'+
+      '<div class="card"><h3>Spend by channel</h3><p class="sub">Google vs. Meta</p>'+bars(p.channels,"$")+'</div>'+
+      '<div class="card"><h3>The numbers</h3><p class="sub">'+d.label+'</p>'+
+        '<div class="mlist">'+
+          m("Impressions",p.impressions)+m("Clicks",p.clicks)+
+          m("Click rate",p.ctr)+m("Cost per click",p.cpc)+
+          m("Leads",p.leads)+m("Cost per lead",p.cpl)+
+        '</div></div>'+
+    '</div>'+
+    '<div class="card sand"><h3>In plain English</h3><p style="margin:0;color:var(--ink-soft);font-size:.92rem">Your ads were seen '+p.impressions+' times and brought '+p.leads+' new leads at '+p.cpl+' each. Google is carrying most of the load right now; we’re shifting a bit more budget there next month.</p></div>';
+  }
+
+  function renderOutbound(d){
+    var o=d.outbound;
+    return ''+
+    '<div class="kpi-row">'+
+      kpi("Emails sent",o.sent,"","flat")+
+      kpi("Reply rate",o.reply,"","up")+
+      kpi("Positive replies",o.positive,"","up")+
+      kpi("Meetings booked",o.meetings,"","up")+
+    '</div>'+
+    '<div class="row c2">'+
+      '<div class="card"><h3>Replies by sequence</h3><p class="sub">Share of positive replies</p>'+bars(o.seq,"%")+'</div>'+
+      '<div class="card"><h3>The funnel</h3><p class="sub">'+d.label+'</p>'+
+        '<div class="mlist">'+
+          m("Emails sent",o.sent)+m("Reply rate",o.reply)+
+          m("Positive replies",o.positive)+m("Meetings booked",o.meetings)+
+        '</div>'+
+        '<div class="note" style="margin-top:1rem">Deliverability healthy — inboxes warm, no spam flags this period.</div></div>'+
+    '</div>'+
+    '<div class="card sand"><h3>In plain English</h3><p style="margin:0;color:var(--ink-soft);font-size:.92rem">We emailed '+o.sent+' qualified prospects. '+o.positive+' replied with interest, and '+o.meetings+' booked a meeting. The “SaaS founders” sequence is outperforming — we’re expanding that list next.</p></div>';
+  }
+
+  function renderSocial(d){
+    var s=d.social;
+    return ''+
+    '<div class="kpi-row">'+
+      kpi("Posts published",s.posts,"","up")+
+      kpi("New followers",s.followers,"","up")+
+      kpi("Engagement rate",s.eng,"","flat")+
+      kpi("Total reach",s.reach,"","up")+
+    '</div>'+
+    '<div class="row c2-wide">'+
+      '<div class="card"><h3>Content calendar</h3><p class="sub">What’s scheduled &amp; recently posted</p>'+calendar()+'</div>'+
+      '<div class="card"><h3>Breakdown</h3><p class="sub">'+d.label+'</p>'+
+        '<div class="mlist">'+
+          m("Instagram posts",s.ig)+m("LinkedIn posts",s.li)+
+          m("New followers",s.followers)+m("Total reach",s.reach)+
+        '</div>'+
+        '<div class="note" style="margin-top:1rem">LinkedIn engagement is climbing fastest — founder posts are resonating.</div></div>'+
+    '</div>';
+  }
+
+  function renderSeo(d){
+    var s=d.seo;
+    return ''+
+    '<div class="kpi-row">'+
+      kpi("Organic visitors",s.visitors,s.visitorsDelta,"up")+
+      kpi("Keywords in top 10",s.top10,s.top10Delta,"up")+
+      kpi("Leads from website",s.leads,"","up")+
+      kpi("Avg. position",s.kws.length?("#"+Math.round(s.kws.reduce(function(a,b){return a+b.p;},0)/s.kws.length)):"—","","up")+
+    '</div>'+
+    '<div class="row c2-wide">'+
+      '<div class="card"><h3>Organic traffic</h3><p class="sub">Visitors from Google, last 6 months</p>'+line(s.trend,MONTHS6)+'</div>'+
+      '<div class="card"><h3>Keyword movement</h3><p class="sub">Tracked keywords this period</p>'+
+        '<table class="kw"><thead><tr><th>Keyword</th><th>Rank</th><th>Change</th></tr></thead><tbody>'+
+        s.kws.map(function(w){
+          return '<tr><td>'+w.k+'</td><td class="pos">#'+w.p+'</td><td>'+(w.u?'<span class="tag-up">▲ '+Math.abs(w.d)+'</span>':'<span class="tag-down">▼ '+Math.abs(w.d)+'</span>')+'</td></tr>';
+        }).join("")+'</tbody></table></div>'+
+    '</div>'+
+    '<div class="card sand"><h3>In plain English</h3><p style="margin:0;color:var(--ink-soft);font-size:.92rem">More people are finding FieldFlow on Google every month — '+s.visitors+' visitors this period ('+s.visitorsDelta+'). You now rank on page 1 for your most valuable search terms, which brings in leads without paying per click.</p></div>';
+  }
+
+  // helpers for small components
+  function kpi(label,val,delta,dir){
+    return '<div class="kpi"><div class="label">'+label+'</div><div class="val">'+val+'</div>'+
+      (delta?deltaSpan(delta,dir)+' <span style="font-size:.72rem;color:var(--ink-soft)">vs. prev</span>':'')+'</div>';
+  }
+  function m(l,v){ return '<div class="m"><div class="l">'+l+'</div><div class="v">'+v+'</div></div>'; }
+  function feed(items,isNext){
+    return '<div class="feed">'+items.map(function(x){
+      return '<div class="feed-item'+(isNext?" next":"")+'"><span class="ic">'+(ICONS[x.ic]||"")+'</span><span>'+x.t+'</span></div>';
+    }).join("")+'</div>';
+  }
+  function calendar(){
+    return '<div class="cal">'+CALENDAR.map(function(c){
+      return '<div class="cal-row"><span class="chip '+c.ch+'">'+(c.ch==="ig"?"IG":"LI")+'</span><span>'+c.t+'</span>'+
+        '<span class="st '+c.st+'">'+(c.st==="done"?"Posted":"Scheduled")+'</span><span class="d">'+c.d+'</span></div>';
+    }).join("")+'</div>';
+  }
+
+  var RENDER={ overview:renderOverview, paid:renderPaid, outbound:renderOutbound, social:renderSocial, seo:renderSeo };
+
+  function render(){
+    var d=DATA[state.range];
+    body.innerHTML='<div class="panel active">'+RENDER[state.tab](d)+'</div>';
+  }
+
+  // ---- Events ----------------------------------------------------------------
+  document.getElementById("rangeToggle").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    state.range=b.getAttribute("data-range");
+    this.querySelectorAll("button").forEach(function(x){x.classList.toggle("active",x===b);});
+    render();
+  });
+  document.getElementById("dashTabs").addEventListener("click",function(e){
+    var b=e.target.closest("button"); if(!b) return;
+    state.tab=b.getAttribute("data-tab");
+    this.querySelectorAll("button").forEach(function(x){x.classList.toggle("active",x===b);});
+    render();
+  });
+
+  render();
+})();
+</script>
+</body>
+</html>
